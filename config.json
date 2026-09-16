@@ -2,5 +2,6 @@
   "serverHost": "kingdomfemboys.mcsh.io",
   "serverPort": 25565,
   "botUsername": "Bot",
-  "botChunk": 5
+  "botChunk": 5,
+  "version": "1.21.4"
 }

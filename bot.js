@@ -1,3 +1,17 @@
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 10000;
+
+// Веб-сервер для прохождения проверки хостинга Render
+app.get('/', (req, res) => {
+  res.send('Бот успешно работает 24/7!');
+});
+
+app.listen(PORT, () => {
+  console.log(`🚀 Веб-сервер запущен на порту ${PORT}`);
+});
+
+// Основной код бота Mineflayer
 const mineflayer = require('mineflayer');
 const config = require('./config.json');
 
@@ -6,19 +20,18 @@ const bot = mineflayer.createBot({
   port: config.serverPort,
   username: config.botUsername,
   auth: 'offline',
-  version: false,
+  version: config.version || "1.20.1", // Берёт версию из конфига, либо ставит 1.20.1 по умолчанию
   viewDistance: config.botChunk
 });
 
 let movementPhase = 0;
 const STEP_INTERVAL = 1500;
-const STEP_SPEED    = 1;
 const JUMP_DURATION = 500;
 
 bot.on('spawn', () => {
   setTimeout(() => {
     bot.setControlState('sneak', true);
-    console.log(`✅ ${config.botUsername} is Ready!`);
+    console.log(`✅ ${config.botUsername} успешно вошёл на сервер и готов!`);
   }, 3000);
 
   setTimeout(movementCycle, STEP_INTERVAL);
@@ -54,13 +67,14 @@ function movementCycle() {
   }
 
   movementPhase = (movementPhase + 1) % 4;
-
   setTimeout(movementCycle, STEP_INTERVAL);
 }
 
 bot.on('error', (err) => {
-  console.error('⚠️ Error:', err);
+  console.error('⚠️ Ошибка бота:', err);
 });
+
 bot.on('end', () => {
-  console.log('⛔️ Bot Disconnected!');
+  console.log('⛔️ Бот отключился от сервера!');
 });
+
